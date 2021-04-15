@@ -13,7 +13,7 @@ export default class AppointmentsRepository {
   }
 
   public create({ date, provider }: CreateAppointmentDTO): Appointment {
-    const parsedDate = startOfHour(date);
+    const parsedDate = startOfHour(parseISO(date.toString()));
     const appointment: Appointment = new Appointment({ provider, date: parsedDate });
 
     this.appointments.push(appointment);
