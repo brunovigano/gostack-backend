@@ -13,8 +13,7 @@ export default class AppointmentsRepository {
   }
 
   public create({ date, provider }: CreateAppointmentDTO): Appointment {
-    const parsedDate = startOfHour(parseISO(date.toString()));
-    const appointment: Appointment = new Appointment({ provider, date: parsedDate });
+    const appointment: Appointment = new Appointment({ provider, date });
 
     this.appointments.push(appointment);
     return appointment;
@@ -24,11 +23,8 @@ export default class AppointmentsRepository {
     return this.appointments;
   }
 
-  public getByDate(date: string): Appointment | null {
-    const parsedDate = startOfHour(parseISO(date));
-
-    const findAppointment = this.appointments.find(appointment => isEqual(appointment.date, parsedDate));
-
+  public getByDate(date: Date): Appointment | null {
+    const findAppointment = this.appointments.find(appointment => isEqual(appointment.date, date));
     return findAppointment || null;
   }
 }
