@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateAppointments1618878754777 implements MigrationInterface {
+export default class CreateUsers1619061895880 implements MigrationInterface {
   private ovo: boolean;
 
   constructor(ovo: boolean) {
@@ -12,7 +12,7 @@ export default class CreateAppointments1618878754777 implements MigrationInterfa
 
     await queryRunner.createTable(
       new Table({
-        name: 'appointments',
+        name: 'users',
         columns: [
           {
             name: 'id',
@@ -22,12 +22,17 @@ export default class CreateAppointments1618878754777 implements MigrationInterfa
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'provider',
+            name: 'name',
             type: 'varchar',
           },
           {
-            name: 'date',
-            type: 'timestamp with time zone',
+            name: 'email',
+            type: 'varchar',
+            isUnique: true,
+          },
+          {
+            name: 'password',
+            type: 'varchar',
           },
           {
             name: 'created_at',
@@ -47,6 +52,6 @@ export default class CreateAppointments1618878754777 implements MigrationInterfa
   public async down(queryRunner: QueryRunner): Promise<void> {
     this.ovo = true;
 
-    await queryRunner.dropTable('appointments');
+    await queryRunner.dropTable('users');
   }
 }

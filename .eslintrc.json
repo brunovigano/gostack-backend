@@ -22,6 +22,7 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
+    "camelcase": "off",
     "prettier/prettier": "error",
     "import/extensions": [
       "error",

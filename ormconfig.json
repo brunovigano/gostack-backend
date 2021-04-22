@@ -5,6 +5,7 @@
   "username": "admin",
   "password": "motorolaZN300",
   "database": "barbearia",
+  "entities": ["./src/models/*.ts"],
   "migrations": ["./src/database/migrations/*.ts"],
   "cli": {
     "migrationsDir": "./src/database/migrations"
