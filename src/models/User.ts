@@ -1,3 +1,4 @@
+import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
@@ -9,10 +10,13 @@ export default class User {
   name: string;
 
   @Column()
+  @IsEmail()
   email: string;
 
   @Column()
-  password: string;
+  @MinLength(5)
+  @MaxLength(20)
+  password?: string;
 
   @CreateDateColumn()
   created_at: Date;

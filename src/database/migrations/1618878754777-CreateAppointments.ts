@@ -1,22 +1,15 @@
+/* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateAppointments1618878754777 implements MigrationInterface {
-  private ovo: boolean;
-
-  constructor(ovo: boolean) {
-    this.ovo = ovo;
-  }
-
   public async up(queryRunner: QueryRunner): Promise<void> {
-    this.ovo = true;
-
     await queryRunner.createTable(
       new Table({
         name: 'appointments',
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'uuid',
             isPrimary: true,
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
@@ -45,8 +38,6 @@ export default class CreateAppointments1618878754777 implements MigrationInterfa
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    this.ovo = true;
-
     await queryRunner.dropTable('appointments');
   }
 }
