@@ -4,10 +4,10 @@ import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
-type Request = {
+interface Request {
   provider_id: string;
   date: Date;
-};
+}
 
 export default class CreateAppointmentService {
   public async execute({ provider_id, date }: Request): Promise<Appointment> {

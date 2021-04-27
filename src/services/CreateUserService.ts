@@ -4,11 +4,11 @@ import { getRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import User from '../models/User';
 
-type Request = {
+interface Request {
   name: string;
   email: string;
   password: string;
-};
+}
 
 export default class CreateUserService {
   public async execute({ name, email, password }: Request): Promise<User> {
