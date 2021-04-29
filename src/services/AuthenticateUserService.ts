@@ -1,6 +1,7 @@
 import { compare } from 'bcrypt';
 import { validate } from 'class-validator';
 import { getRepository } from 'typeorm';
+import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 
 /* eslint-disable class-methods-use-this */
@@ -9,19 +10,32 @@ interface Request {
   password: string;
 }
 
+interface Response {
+  user: User;
+  bearer: string;
+}
+
 export default class AuthenticateUserService {
-  public async execute({ email, password }: Request): Promise<User> {
+  public async execute({ email, password }: Request): Promise<Response> {
     const userRepository = getRepository(User);
-    const user = userRepository.create({ email, password });
-    const validationErrors = await validate(user);
+    const userModel = userRepository.create({ email, password });
+    const validationErrors = await validate(userModel);
+
     if (validationErrors.length) throw new Error(JSON.stringify(validationErrors));
 
-    const userAlreadyExists = await userRepository.findOne({ where: { email } });
-    if (!userAlreadyExists) throw new Error(JSON.stringify('Invalid credentials!'));
+    const user = await userRepository.findOne({ where: { email } });
+    if (!user) throw new Error(JSON.stringify('Invalid credentials!'));
 
-    const passwordMatched = await compare(user.password, String(userAlreadyExists.password));
+    const passwordMatched = await compare(userModel.password, String(user.password));
     if (!passwordMatched) throw new Error(JSON.stringify('Invalid credentials!'));
 
-    return userAlreadyExists;
+    const secret = String(process.env.JWT_SECRET);
+
+    const bearer = sign({}, secret, {
+      subject: user.id,
+      expiresIn: '50d',
+    });
+
+    return { user, bearer };
   }
 }
