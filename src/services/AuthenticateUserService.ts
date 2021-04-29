@@ -2,6 +2,7 @@ import { compare } from 'bcrypt';
 import { validate } from 'class-validator';
 import { getRepository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
+import { authConfig } from '../config/auth';
 import User from '../models/User';
 
 /* eslint-disable class-methods-use-this */
@@ -29,11 +30,11 @@ export default class AuthenticateUserService {
     const passwordMatched = await compare(userModel.password, String(user.password));
     if (!passwordMatched) throw new Error(JSON.stringify('Invalid credentials!'));
 
-    const secret = String(process.env.JWT_SECRET);
+    const { secret, expiresIn } = authConfig.jwt;
 
     const bearer = sign({}, secret, {
       subject: user.id,
-      expiresIn: '50d',
+      expiresIn,
     });
 
     return { user, bearer };
