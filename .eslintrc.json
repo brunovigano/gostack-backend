@@ -3,12 +3,6 @@
     "es2021": true,
     "node": true
   },
-  // "extends": [
-  //   "airbnb-base",
-  //   "plugin:@typescript-eslint/recommended",
-  //   "prettier/@typescript-eslint",
-  //   "plugin:prettier/recommended"
-  // ],
   "extends": [
     "airbnb-base",
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
