@@ -29,7 +29,17 @@ usersRouter.get('/', async (request, response) => {
 });
 
 usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-  return response.json(request.file);
+  try {
+    const user_id = request.user.id;
+    const avatarFilename = request.file.filename;
+
+    const user = await UpdateUserAvatarService.execute({ user_id, avatarFilename });
+    delete user?.password;
+
+    return response.json(user);
+  } catch (error) {
+    throw new Error(error);
+  }
 });
 
 export default usersRouter;

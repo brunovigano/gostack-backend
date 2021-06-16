@@ -18,6 +18,9 @@ export default class User {
   @MaxLength(20)
   password?: string;
 
+  @Column()
+  avatar: string;
+
   @CreateDateColumn()
   created_at: Date;
 
