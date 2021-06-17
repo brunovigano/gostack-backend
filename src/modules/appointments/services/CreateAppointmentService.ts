@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
-import AppError from '../errors/AppError';
-import Appointment from '../models/Appointment';
+import Appointment from '../entities/Appointment';
+import AppError from '../../../shared/errors/AppError';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 interface Request {
