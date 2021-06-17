@@ -4,14 +4,14 @@ import { getRepository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { authConfig } from '../config/auth';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
-/* eslint-disable class-methods-use-this */
 interface Request {
   email: string;
   password: string;
 }
 
-interface Response {
+export interface Response {
   user: User;
   bearer: string;
 }
@@ -22,13 +22,13 @@ export default class AuthenticateUserService {
     const userModel = userRepository.create({ email, password });
     const validationErrors = await validate(userModel);
 
-    if (validationErrors.length) throw new Error(JSON.stringify(validationErrors));
+    if (validationErrors.length) throw new AppError(validationErrors[0].toString());
 
     const user = await userRepository.findOne({ where: { email } });
-    if (!user) throw new Error(JSON.stringify('Invalid credentials!'));
+    if (!user) throw new AppError('Invalid credentials!', 401);
 
     const passwordMatched = await compare(userModel.password, String(user.password));
-    if (!passwordMatched) throw new Error(JSON.stringify('Invalid credentials!'));
+    if (!passwordMatched) throw new AppError('Invalid credentials!', 401);
 
     const { secret, expiresIn } = authConfig.jwt;
 

@@ -6,20 +6,17 @@ import User from '../models/User';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import UpdateUserAvatarService from '../services/UpdateUserAvatarService';
 import uploadConfig from '../config/upload';
+import AppError from '../errors/AppError';
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);
 
 usersRouter.post('/', async (request, response) => {
-  try {
-    const { name, email, password } = request.body;
-    const createUser: CreateUserService = new CreateUserService();
-    const user = await createUser.execute({ name, email, password });
-    delete user.password;
-    return response.json(user);
-  } catch (error) {
-    return response.status(400).json({ error: JSON.parse(error.message) });
-  }
+  const { name, email, password } = request.body;
+  const createUser: CreateUserService = new CreateUserService();
+  const user = await createUser.execute({ name, email, password });
+  delete user.password;
+  return response.json(user);
 });
 
 usersRouter.get('/', async (request, response) => {
@@ -29,17 +26,13 @@ usersRouter.get('/', async (request, response) => {
 });
 
 usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-  try {
-    const user_id = request.user.id;
-    const avatarFilename = request.file.filename;
+  const user_id = request.user.id;
+  const avatarFilename = request.file.filename;
 
-    const user = await UpdateUserAvatarService.execute({ user_id, avatarFilename });
-    delete user?.password;
+  const user = await UpdateUserAvatarService.execute({ user_id, avatarFilename });
+  delete user?.password;
 
-    return response.json(user);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return response.json(user);
 });
 
 export default usersRouter;

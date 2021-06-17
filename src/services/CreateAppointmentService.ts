@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
+import AppError from '../errors/AppError';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
@@ -14,7 +15,7 @@ export default class CreateAppointmentService {
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
     const parsedDate = startOfHour(date);
     const findAppointmentInSameDate = await appointmentsRepository.getByDate(parsedDate);
-    if (findAppointmentInSameDate) throw Error('This appointment is already booked');
+    if (findAppointmentInSameDate) throw new AppError('This appointment is already booked');
     const appointment = appointmentsRepository.create({ provider_id, date: parsedDate });
     await appointmentsRepository.save(appointment);
 
